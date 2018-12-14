@@ -13,6 +13,54 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+
+$api = app('Dingo\Api\Routing\Router');
+
+
+$api->version('v1', function($api) {
+    $api->get('version', function() {
+        return response('this is version v1');
+    });
+});
+
+$api->version('v1', [
+    'namespace' => 'App\Http\Controllers\Api\V1',
+    'middleware' => 'serializer:array'
+], function($api) {
+  $api->group([
+      'middleware'=>'api.throttle',
+      'limit'=>config('api.rate_limits.sign.limit'),
+      'expires'=>config('api.rate_limits.sign.expires'),
+    ],function($api){
+
+      $api->post('reset/password','UsersController@resetPass')->name('api.users.resetPass');
+      $api->post('reset/code','VerificationCodesController@resetPass')->name('api.verificationCodes.resetPass');
+      // 短信验证码
+      $api->post('verificationCodes', 'VerificationCodesController@store')
+          ->name('api.verificationCodes.store');
+
+      // 用户注册
+      $api->post('users', 'UsersController@store')
+          ->name('api.users.store');
+      // 图片验证码
+      $api->post('captchas', 'CaptchasController@store')
+          ->name('api.captchas.store');
+      //$api->post('captchas/email', 'CaptchasController@storeByEmail')
+      //    ->name('api.captchas.email.store');
+      // 第三方登录
+      $api->post('socials/{social_type}/authorizations', 'AuthorizationsController@socialStore')
+            ->name('api.socials.authorizations.store');
+      });
+      // 登录
+      $api->post('authorizations', 'AuthorizationsController@store')
+      ->name('api.authorizations.store');
+      // 刷新token
+      $api->put('authorizations/current', 'AuthorizationsController@update')
+          ->name('api.authorizations.update');
+      // 删除token
+      $api->delete('authorizations/current', 'AuthorizationsController@destroy')
+          ->name('api.authorizations.destroy');
 });

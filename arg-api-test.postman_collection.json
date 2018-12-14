@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "db593628-8f4a-421b-a6db-38dd50cc1c6e",
+		"name": "arg-api-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "api-version ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://arg.test/api/version",
+					"protocol": "http",
+					"host": [
+						"arg",
+						"test"
+					],
+					"path": [
+						"api",
+						"version"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "图片验证码获取",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone",
+							"value": "13466654933",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "phone",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{arghost}}/api/captchas",
+					"protocol": "http",
+					"host": [
+						"{{arghost}}"
+					],
+					"path": [
+						"api",
+						"captchas"
+					]
+				},
+				"description": "图片验证码获取\n"
+			},
+			"response": []
+		},
+		{
+			"name": "获取手机验证码",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{arghost}}/api/verificationCodes",
+					"protocol": "http",
+					"host": [
+						"{{arghost}}"
+					],
+					"path": [
+						"api",
+						"verificationCodes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "用户注册",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "verificationCode_5c68FdWWyxElxM3",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/api/users",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
