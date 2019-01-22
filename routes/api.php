@@ -53,6 +53,39 @@ $api->version('v1', [
       // 第三方登录
       $api->post('socials/{social_type}/authorizations', 'AuthorizationsController@socialStore')
             ->name('api.socials.authorizations.store');
+
+            $api->group(['middleware' => 'api.auth'], function($api) {
+                // 当前登录用户信息
+                $api->get('user', 'UsersController@me')
+                        ->name('api.user.show');
+                // 数据上传
+                $api->post('data','DatasController@store')->name('api.datas.store');
+
+                // 样地数据
+                $api->get('/data/lands/{land_id}','DatasController@showLand')->name('api.datas.showLand');
+                $api->get('/data/lands','DatasController@indexLand')->name('api.datas.indexLand');
+                $api->post('data/lands','DatasController@storeLand')->name('api.datas.storeLand');
+                $api->put('data/lands/{land_id}','DatasController@updateLand')->name('api.datas.updateLand');
+                $api->delete('data/lands/{land_id}','DatasController@deleteLand')->name('api.datas.deleteLand');
+                // 样方数据
+                $api->get('/data/lands/{land_id}/plots/{plot_id}','DatasController@showPlot')->name('api.datas.showPlot');
+                $api->get('/data/lands/{land_id}/plots','DatasController@indexPlot')->name('api.datas.indexPlot');
+                $api->post('data/lands/{land_id}/plots','DatasController@storePlot')->name('api.datas.storePlot');
+                $api->put('data/lands/{land_id}/plots/{plot_id}','DatasController@updatePlot')->name('api.datas.updatePlot');
+                $api->delete('data/lands/{land_id}/plots/{plot_id}','DatasController@deletePlot')->name('api.datas.deletePlot');
+                // 物种数据
+                $api->get('/data/lands/{land_id}/plots/{plot_id}/species/{specie_id}','DatasController@showSpecie')->name('api.datas.showSpecie');
+                $api->get('data/lands/{land_id}/plots/{plot_id}/species','DatasController@indexSpecie')->name('api.datas.indexSpecie');
+                $api->post('data/lands/{land_id}/plots/{plot_id}/species','DatasController@storeSpecie')->name('api.datas.storeSpecie');
+                $api->put('data/lands/{land_id}/plots/{plot_id}/species/{specie_id}','DatasController@updateSpecie')->name('api.datas.updateSpecie');
+                $api->delete('data/lands/{land_id}/plots/{plot_id}/species/{specie_id}','DatasController@deleteSpecie')->name('api.datas.deleteSpecie');
+                // 样点数据
+                $api->get('data/points','DatasController@indexPoint')->name('api.datas.indexPoint');
+                $api->get('data/points/{point_id}','DatasController@showPoint')->name('api.datas.showPoint');
+                $api->post('data/points','DatasController@storePoint')->name('api.datas.storePoint');
+                $api->put('data/points/{point_id}','DatasController@updatePoint')->name('api.datas.updatePoint');
+                $api->delete('data/species/{point_id}','DatasController@deletePoint')->name('api.datas.deletePoint');
+            });
       });
       // 登录
       $api->post('authorizations', 'AuthorizationsController@store')
@@ -63,4 +96,6 @@ $api->version('v1', [
       // 删除token
       $api->delete('authorizations/current', 'AuthorizationsController@destroy')
           ->name('api.authorizations.destroy');
+
+
 });

@@ -17,6 +17,7 @@ class User extends Authenticatable implements JWTSubject
     use Searchable;
     use HasPushSubscriptions;
 
+    static $type = 'user';
     /**
      * The attributes that are mass assignable.
      *
