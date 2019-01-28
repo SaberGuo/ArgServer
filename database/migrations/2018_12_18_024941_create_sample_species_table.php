@@ -20,7 +20,7 @@ class CreateSampleSpeciesTable extends Migration
           $table->integer('plot_id')->unsigned();
           $table->enum('type', ['herb', 'shrub','arbor']);//herb,草本,shrub,灌木,arbor,乔木
           $table->json('data');
-          $table->foreign('plot_id')->references('plot_id')->on('plots')
+          $table->foreign('plot_id')->references('id')->on('plots')
               ->onUpdate('cascade')->onDelete('cascade');
           $table->string('name',50);
           $table->decimal('latin_name',50);

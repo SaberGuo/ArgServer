@@ -20,7 +20,7 @@ class CreateSamplePointsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->json('data');
             $table->decimal('lat', 10, 8);
-            $table->decimal('lng', 11, 8);
+            $table->decimal('lng', 10, 8);
             $table->decimal('alt',10, 2);
             $table->string('investigator_name',50);
             $table->datetime('investigated_at')->nullable();
