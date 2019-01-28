@@ -15,17 +15,16 @@ class CreateSamplePlotsTable extends Migration
     {
         Schema::create('plots', function (Blueprint $table) {
           $table->increments('id');
-          $table->string('plot_id',50);
-          $table->string('code',50);
-          $table->string('land_id',50)->unsigned();
-          $table->enum('type', ['herb', 'shrub','arbor']);//herb,草本,shrub,灌木,arbor,乔木
+          $table->string('plot_id');
+          $table->string('code');
+          $table->integer('land_id')->unsigned();
+          $table->enum('type', ['herb', 'shrub','arbor']);
           $table->json('data');
-          $table->foreign('land_id')->references('land_id')->on('sample_lands')
-              ->onUpdate('cascade')->onDelete('cascade');
+          $table->foreign('land_id')->references('id')->on('lands')->onUpdate('cascade')->onDelete('cascade');
           $table->decimal('lat', 10, 8);
-          $table->decimal('lng', 11, 8);
+          $table->decimal('lng', 10, 8);
           $table->decimal('alt',10, 2);
-          $table->string('investigator_name',50);
+          $table->string('investigator_name');
           $table->datetime('investigated_at')->nullable();
           $table->timestamp('uploaded_at')->nullable();
           $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
