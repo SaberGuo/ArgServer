@@ -73,7 +73,7 @@ class VerificationCodesController extends Controller
         //}
 
         //$phone = $captchaData['phone'];
-        $phone = $request->phone
+        $phone = $request->phone;
 
         if(env('API_DEBUG') == true){
           $code = '1234';

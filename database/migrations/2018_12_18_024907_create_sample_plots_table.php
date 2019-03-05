@@ -24,7 +24,7 @@ class CreateSamplePlotsTable extends Migration
           $table->decimal('lat', 10, 8);
           $table->decimal('lng', 10, 8);
           $table->decimal('alt',10, 2);
-          $table->string('investigator_name',50);
+          $table->string('investigator_name');
           $table->datetime('investigated_at')->nullable();
           $table->timestamp('uploaded_at')->nullable();
           $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));

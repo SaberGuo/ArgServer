@@ -9,7 +9,7 @@ use App\Models\Plot;
 use App\Models\Point;
 use App\Models\Specie;
 use App\Models\Picture;
-
+use Illuminate\Support\Facades\Log;
 use App\Transformers\DevicesTransformer;
 use App\Transformers\DeviceDataTransformer;
 use App\Http\Requests\Api\LandRequest;
@@ -93,7 +93,7 @@ class DatasController extends Controller
     }
 
     public function storePlot($land_id, PlotRequest $request){
-      $land = Land:where('land_id',$land_id);
+      $land = Land::where('land_id',$land_id);
       if($land && isOwner($this->user(), $land)){
         $plot = Plot::Create([
           'plot_id'=>$request->plot_id,
@@ -125,7 +125,7 @@ class DatasController extends Controller
 
     public function storeSpecie($land_id, $plot_id, SpecieRequest $request){
       $land = Land::where('land_id',$land_id);
-      $plot = Plot:where('plot_id',$plot_id);
+      $plot = Plot::where('plot_id',$plot_id);
       if($plot && $land && isOwner($this->user(), $land) && isOwner($land, $plot)){
         $specie = Specie::Create([
           'specie_id'=>$request->specie_id,
@@ -147,18 +147,33 @@ class DatasController extends Controller
       }
     }
 
-    public function storePoint(PointRequest $request){
-      $point = Point::Create([
-        'point_id'=>$request->point_id,
-        'lat'=>$request->lat,
-        'lng'=>$request->lng,
-        'alt'=>$request->alt,
-        'investigator_name'=>$request->investigator_name,
-        'investigated_at'=>$request->investigated_at,
-        'data'=>$request->data,
-        'uploaded_at'=>$request->uploaded_at
-      ]);
+    public function storePoint(Request $request){
+      $res = $request->json()->all();
+      Log::info($res);
+      Log::info($this->user()->id);
+      $point = new Point();
+      $point->point_id=json_encode($res['point_id']);
+      if($res['lat']){
+      $point->lat=json_encode($res['lat']);
+      }
+      if($res['lng']){
+      $point->lng=json_encode($res['lng']);
+      }
+      if($res['alt']){
+      $point->alt=json_encode($res['alt']);
+      }
+      if($res['investigator_name']){
+      $point->investigator_name=json_encode($res['investigator_name']);
+      }
+      if($res['investigated_at']){
+      $point->investigated_at=json_encode($res['investigated_at']);
+      }
+    
+      $point->data=json_encode($res['data']);
+      
+      $point->upload_at=json_encode($res['upload_at']);
       $point->user()->associate($this->user());
+      $point->save();
       return $this->response->array($point);
     }
 
