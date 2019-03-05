@@ -17,7 +17,6 @@ class CreateSamplePointsTable extends Migration
             $table->increments('id');
             $table->string('point_id',50);
             $table->string('code',50);
-            $table->integer('user_id')->unsigned();
             $table->json('data');
             $table->decimal('lat', 10, 8);
             $table->decimal('lng', 10, 8);
