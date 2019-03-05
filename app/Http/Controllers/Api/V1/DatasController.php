@@ -21,7 +21,7 @@ use App\Http\Requests\Api\PictureRequst;
 class DatasController extends Controller
 {
     //
-    function function store(Request $request){
+    public function store(Request $request){
 
     }
 
