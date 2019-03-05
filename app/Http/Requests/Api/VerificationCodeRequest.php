@@ -24,16 +24,19 @@ class VerificationCodeRequest extends FormRequest
     public function rules()
     {
       return [
-            'captcha_key' => 'required|string',
-            'captcha_code' => 'required|string',
+            //'captcha_key' => 'required|string',
+            //'captcha_code' => 'required|string',
+            'type' => 'required|in:phone,email',
+            'phone' => 'required_if:type,phone|regex:/^1[34578]\d{9}$/|unique:users,phone',
+
         ];
     }
 
     public function attributes()
     {
         return [
-            'captcha_key' => '图片验证码 key',
-            'captcha_code' => '图片验证码',
+            //'captcha_key' => '图片验证码 key',
+            //'captcha_code' => '图片验证码',
         ];
     }
 }
