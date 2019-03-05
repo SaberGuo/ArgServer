@@ -17,10 +17,10 @@ class CreateSamplePlotsTable extends Migration
           $table->increments('id');
           $table->string('plot_id',50);
           $table->string('code',50);
-          $table->string('land_id',50)->unsigned();
+          $table->integer('land_id')->unsigned();
           $table->enum('type', ['herb', 'shrub','arbor']);//herb,草本,shrub,灌木,arbor,乔木
           $table->json('data');
-          $table->foreign('land_id')->references('land_id')->on('lands')->onUpdate('cascade')->onDelete('cascade');
+          $table->foreign('land_id')->references('id')->on('lands')->onUpdate('cascade')->onDelete('cascade');
           $table->decimal('lat', 10, 8);
           $table->decimal('lng', 10, 8);
           $table->decimal('alt',10, 2);
