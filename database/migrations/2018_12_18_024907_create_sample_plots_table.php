@@ -16,17 +16,17 @@ class CreateSamplePlotsTable extends Migration
         Schema::create('plots', function (Blueprint $table) {
           $table->increments('id');
           $table->string('plot_id',50);
-          $table->string('code',50);
+          $table->string('code',50)->nullable();
           $table->integer('land_id')->unsigned();
-          $table->enum('type', ['herb', 'shrub','arbor']);//herb,草本,shrub,灌木,arbor,乔木
+          $table->enum('type', ['herb', 'shrub','arbor'])->nullable();//herb,草本,shrub,灌木,arbor,乔木
           $table->json('data');
           $table->foreign('land_id')->references('id')->on('lands')->onUpdate('cascade')->onDelete('cascade');
-          $table->decimal('lat', 10, 8);
-          $table->decimal('lng', 10, 8);
-          $table->decimal('alt',10, 2);
-          $table->string('investigator_name');
+          $table->decimal('lat', 10, 8)->nullable();
+          $table->decimal('lng', 10, 8)->nullable();
+          $table->decimal('alt',10, 2)->nullable();
+          $table->string('investigator_name')->nullable();
           $table->datetime('investigated_at')->nullable();
-          $table->timestamp('uploaded_at')->nullable();
+          $table->timestamp('upload_at')->nullable();
           $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
           $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
           $table->softDeletes();

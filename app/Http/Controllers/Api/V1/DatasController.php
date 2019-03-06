@@ -75,38 +75,80 @@ class DatasController extends Controller
     }
 
     public function storeLand(LandRequest $request){
-      $land = Land::Create([
-        'land_id'=>$request->land_id,
-        'code'=>$request->code,
-        'lat'=>$request->lat,
-        'lng'=>$request->lng,
-        'alt'=>$request->alt,
-        'type'=>$request->type,
-        'investigator_name'=>$request->investigator_name,
-        'investigated_at'=>$request->investigated_at,
-        'data'=>$request->data,
-        'uploaded_at'=>$request->uploaded_at
-      ]);
-      $land->user()->associate($this->user());
+      $land = new Land();
+      $res = $request->json()->all();
+      if($res['land_id']){
+        $land->land_id = $res['land_id'];
+      }
+      if($res['code']){
+        $land->code = $res['code'];
+      }
+      if($res['lat']){
+        $land->lat = $res['lat'];
+      }
+      if($res['lng']){
+        $land->lng = $res['lng'];
+      }
+      if($res['alt']){
+        $land->alt = $res['alt'];
+      }
+      if($res['type']){
+        $land->type = $res['type'];
+      }
+      if($res['investigator_name']){
+        $land->investigator_name = $res['investigator_name'];
+      }
+      if($res['investigated_at']){
+        $land->investigated_at = $res['investigated_at'];
+      }
+      if($res['data']){
+        $land->data = json_encode($res['data']);
+      }
+      if($res['upload_at']){
+        $land->upload_at = $res['upload_at'];
+      }
 
+      $land->user()->associate($this->user());
+      $land->save();
       return $this->response->array($land);
     }
 
     public function storePlot($land_id, PlotRequest $request){
       $land = Land::where('land_id',$land_id);
       if($land && isOwner($this->user(), $land)){
-        $plot = Plot::Create([
-          'plot_id'=>$request->plot_id,
-          'code'=>$request->code,
-          'lat'=>$request->lat,
-          'lng'=>$request->lng,
-          'alt'=>$request->alt,
-          'type'=>$request->type,
-          'investigator_name'=>$request->investigator_name,
-          'investigated_at'=>$request->investigated_at,
-          'data'=>$request->data,
-          'uploaded_at'=>$request->uploaded_at
-        ]);
+        $res = $request->json()->all();
+        $plot = new Plot();
+        if($res['plot_id']){
+          $plot->plot_id = $res['plot_id'];
+        }
+        if($res['code']){
+          $plot->code = $res['code'];
+        }
+        if($res['lat']){
+          $plot->lat = $res['lat'];
+        }
+        if($res['lng']){
+          $plot->lng = $res['lng'];
+        }
+        if($res['alt']){
+          $plot->alt = $res['alt'];
+        }
+        if($res['type']){
+          $plot->type = $res['type'];
+        }
+        if($res['investigator_name']){
+          $plot->investigator_name = $res['investigator_name'];
+        }
+        if($res['investigated_at']){
+          $plot->investigated_at = $res['investigated_at'];
+        }
+        if($res['data']){
+          $plot->data = json_encode($res['data']);
+        }
+        if($res['upload_at']){
+          $plot->upload_at = $res['upload_at'];
+        }
+
         foreach( $request->owner_list as $owner_id){
           $owner = Plot::where('plot_id', $owner_id)->first();
           if($owner){
@@ -114,6 +156,7 @@ class DatasController extends Controller
           }
         }
         $plot->land()->associate($land);
+        $plot->save();
         return $this->response->array($plot);
       }
       else{
@@ -127,19 +170,41 @@ class DatasController extends Controller
       $land = Land::where('land_id',$land_id);
       $plot = Plot::where('plot_id',$plot_id);
       if($plot && $land && isOwner($this->user(), $land) && isOwner($land, $plot)){
-        $specie = Specie::Create([
-          'specie_id'=>$request->specie_id,
-          'code'=>$request->code,
-          'lat'=>$request->lat,
-          'lng'=>$request->lng,
-          'alt'=>$request->alt,
-          'type'=>$request->type,
-          'name'=>$request->name,
-          'latin_name'=>$request->latin_name,
-          'data'=>$request->data,
-          'uploaded_at'=>$request->uploaded_at
-        ]);
+        $res = $request->json()->all();
+        $specie = new Specie();
+        if($res['specie_id']){
+          $specie->specie_id = $res['specie_id'];
+        }
+        if($res['code']){
+          $specie->code = $res['code'];
+        }
+        if($res['lat']){
+          $specie->lat = $res['lat'];
+        }
+        if($res['lng']){
+          $specie->lng = $res['lng'];
+        }
+        if($res['alt']){
+          $specie->alt = $res['alt'];
+        }
+        if($res['type']){
+          $specie->type = $res['type'];
+        }
+        if($res['name']){
+          $specie->name = $res['name'];
+        }
+        if($res['latin_name']){
+          $specie->latin_name = $res['latin_name'];
+        }
+        if($res['data']){
+          $specie->specie_id = json_encode($res['data']);
+        }
+        if($res['upload_at']){
+          $specie->upload_at = $res['upload_at'];
+        }
+
         $specie->plot()->associate($plot);
+        $specie->save();
         return $this->response->array($specie);
       }
       else{
@@ -149,8 +214,7 @@ class DatasController extends Controller
 
     public function storePoint(Request $request){
       $res = $request->json()->all();
-      Log::info($res);
-      Log::info($this->user()->id);
+
       $point = new Point();
       $point->code = json_encode($res['code']);
       $point->point_id=json_encode($res['point_id']);
