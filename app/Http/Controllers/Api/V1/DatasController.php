@@ -152,6 +152,7 @@ class DatasController extends Controller
       Log::info($res);
       Log::info($this->user()->id);
       $point = new Point();
+      $point->code = json_encode($res['code']);
       $point->point_id=json_encode($res['point_id']);
       if($res['lat']){
       $point->lat=json_encode($res['lat']);
@@ -168,10 +169,12 @@ class DatasController extends Controller
       if($res['investigated_at']){
       $point->investigated_at=json_encode($res['investigated_at']);
       }
-    
+
       $point->data=json_encode($res['data']);
-      
+      if($res['upload_at']){
       $point->upload_at=json_encode($res['upload_at']);
+      }
+
       $point->user()->associate($this->user());
       $point->save();
       return $this->response->array($point);
