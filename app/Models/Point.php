@@ -10,7 +10,7 @@ class Point extends Base
     const TABLE = 'points';
     protected $table = self::TABLE;
 
-    static $type = 'point';
+    public static $tp = 'point';
 
     protected $fillable = ['point_id','code','lat', 'lng', 'alt','investigator_name','investigated_at','data','uploaded_at'];
 

@@ -22,7 +22,7 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function($api) {
     $api->get('version', function() {
-        return response('this is version v1 ssm');
+        return response('this is version v1');
     });
 });
 
@@ -84,7 +84,7 @@ $api->version('v1', [
                 $api->get('data/points/{point_id}','DatasController@showPoint')->name('api.datas.showPoint');
                 $api->post('data/points','DatasController@storePoint')->name('api.datas.storePoint');
                 $api->put('data/points/{point_id}','DatasController@updatePoint')->name('api.datas.updatePoint');
-                $api->delete('data/species/{point_id}','DatasController@deletePoint')->name('api.datas.deletePoint');
+                $api->delete('data/points/{point_id}','DatasController@deletePoint')->name('api.datas.deletePoint');
             });
       });
       // 登录

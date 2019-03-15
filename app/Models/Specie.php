@@ -10,7 +10,7 @@ class Specie extends Base
     const TABLE = 'species';
     protected $table = self::TABLE;
 
-    static $type = "specie";
+    public static $tp = "specie";
 
     protected $fillable = ['specie_id','code', 'lat', 'lng', 'alt','type','name','latin_name','data','uploaded_at'];
 

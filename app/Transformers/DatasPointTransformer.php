@@ -10,15 +10,15 @@ class DatasPointTransformer extends TransformerAbstract
     public function transform(Point $point)
     {
       return [
-          'id' => $plot->id,
-          'lat' =>$plot->lat,
-          'lng' =>$plot->lng,
-          'alt' =>$plot->alt,
+          'point_id' => $point->point_id,
+          'lat' =>$point->lat,
+          'lng' =>$point->lng,
+          'alt' =>$point->alt,
 
-          'investigator_name' =>$plot->investigator_name,
-          'investigated_at' =>$plot->investigated_at,
+          'investigator_name' =>$point->investigator_name,
+          'investigated_at' =>$point->investigated_at,
           //'uploaded_at' => $land->uploaded_at,
-          'data' => $plot->data,
+          'data' => json_decode($point->data),
 
       ];
     }

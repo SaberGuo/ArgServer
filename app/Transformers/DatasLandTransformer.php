@@ -18,7 +18,7 @@ class DatasLandTransformer extends TransformerAbstract
             'investigator_name' =>$land->investigator_name,
             'investigated_at' =>$land->investigated_at,
             //'uploaded_at' => $land->uploaded_at,
-            'data' => $land->data,
+            'data' => json_decode($land->data),
 
         ];
     }

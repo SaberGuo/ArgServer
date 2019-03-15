@@ -18,7 +18,7 @@ class DatasPlotTransformer extends TransformerAbstract
           'investigator_name' =>$plot->investigator_name,
           'investigated_at' =>$plot->investigated_at,
           //'uploaded_at' => $land->uploaded_at,
-          'data' => $plot->data,
+          'data' => json_decode($plot->data),
 
       ];
     }

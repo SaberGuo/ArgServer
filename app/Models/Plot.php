@@ -10,7 +10,7 @@ class Plot extends Base
     const TABLE = 'plots';
     protected $table = self::TABLE;
 
-    static $type = 'plot';
+    public static $tp = 'plot';
 
     protected $fillable = ['plot_id','code', 'lat', 'lng', 'alt','type','investigator_name','investigated_at','data','uploaded_at'];
 

@@ -10,7 +10,7 @@ class Land extends Base
     const TABLE = 'lands';
     protected $table = self::TABLE;
 
-    static $type = "land";
+    public static $tp = "land";
 
     protected $fillable = ['land_id','code', 'lat', 'lng', 'alt','type','investigator_name','investigated_at','data','uploaded_at'];
 
