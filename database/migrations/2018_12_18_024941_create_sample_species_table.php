@@ -15,7 +15,7 @@ class CreateSampleSpeciesTable extends Migration
     {
         Schema::create('species', function (Blueprint $table) {
           $table->increments('id');
-          $table->string('specie_id',50);
+          $table->string('species_id',50);
           $table->string('code',50)->nullable();
           $table->integer('plot_id')->unsigned();
           $table->enum('type', ['herb', 'shrub','arbor'])->nullable();//herb,草本,shrub,灌木,arbor,乔木

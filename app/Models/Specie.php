@@ -12,7 +12,7 @@ class Specie extends Base
 
     public static $tp = "specie";
 
-    protected $fillable = ['specie_id','code', 'lat', 'lng', 'alt','type','name','latin_name','data','uploaded_at'];
+    protected $fillable = ['species_id','code', 'lat', 'lng', 'alt','type','name','latin_name','data','uploaded_at'];
 
     public function plot() {
         return $this->belongsTo('App\Models\Plot', 'plot_id','plot_id');

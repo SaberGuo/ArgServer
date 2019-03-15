@@ -120,8 +120,8 @@ class DatasController extends Controller
     }
     protected function _storeSpecie($plot, $res){
       $specie = new Specie();
-      if($res['specie_id']){
-        $specie->specie_id = $res['specie_id'];
+      if($res['species_id']){
+        $specie->species_id = $res['species_id'];
       }
       if($res['code']){
         $specie->code = $res['code'];
