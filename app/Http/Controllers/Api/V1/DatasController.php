@@ -68,10 +68,10 @@ class DatasController extends Controller
       return $this->response->errorUnauthorized("更新错误!");
     }
 
-    public function updateSpecie($land_id, $plot_id, $specie_id, Request $request){
+    public function updateSpecie($land_id, $plot_id, $species_id, Request $request){
       $land = Land::where('land_id', $land_id)->first();
       $plot = Plot::where('plot_id', $plot_id)->first();
-      $specie = Specie::where('specie_id', $specie_id)->first();
+      $specie = Specie::where('species_id', $species_id)->first();
 
       if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land, $plot) && $specie && $this->isOwner($plot, $specie)){
         $specie->update($request);
@@ -126,7 +126,7 @@ class DatasController extends Controller
       if($res['code']){
         $specie->code = $res['code'];
       }
-      
+
       if($res['type']){
         $specie->type = $res['type'];
       }
@@ -137,7 +137,7 @@ class DatasController extends Controller
         $specie->latin_name = $res['latin_name'];
       }
       if($res['data']){
-        $specie->specie_id = json_encode($res['data']);
+        $specie->data = json_encode($res['data']);
       }
       if($res['upload_at']){
         $specie->upload_at = $res['upload_at'];
@@ -214,9 +214,9 @@ class DatasController extends Controller
 
     public function storeSpecie($land_id, $plot_id, Request $request){
       $res = $request->json()->all();
-      $specie = Specie::where('specie_id',$res['specie_id'])->first();
+      $specie = Specie::where('species_id',$res['species_id'])->first();
       if($specie){
-        return $this->response->errorBadRequest("specie_id 已经存在");
+        return $this->response->errorBadRequest("species_id 已经存在");
       }
 
       $land = Land::where('land_id',$land_id);
@@ -301,10 +301,10 @@ class DatasController extends Controller
       }
     }
 
-    public function showSpecie($land_id, $plot_id, $specie_id, Request $request){
+    public function showSpecie($land_id, $plot_id, $species_id, Request $request){
       $land = Land::where('land_id',$land_id)->first();
       $plot = Plot::where('plot_id',$plot_id)->first();
-      $specie = Specie::where('specie_id',$specie_id)->first();
+      $specie = Specie::where('species_id',$species_id)->first();
       if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land, $plot) && $specie && $this->isOwner($plot, $specie)){
         return $item->response->item($specie, new DatasSpecieTransformer());
       }
