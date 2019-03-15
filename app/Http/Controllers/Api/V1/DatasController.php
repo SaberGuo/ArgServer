@@ -126,15 +126,7 @@ class DatasController extends Controller
       if($res['code']){
         $specie->code = $res['code'];
       }
-      if($res['lat']){
-        $specie->lat = $res['lat'];
-      }
-      if($res['lng']){
-        $specie->lng = $res['lng'];
-      }
-      if($res['alt']){
-        $specie->alt = $res['alt'];
-      }
+      
       if($res['type']){
         $specie->type = $res['type'];
       }
