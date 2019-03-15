@@ -19,9 +19,9 @@ class CreateSamplePointsTable extends Migration
             $table->string('code',50);
             $table->integer('user_id')->unsigned();
             $table->json('data')->nullable();
-            $table->decimal('lat', 10, 8)->nullable();
-            $table->decimal('lng', 10, 8)->nullable();
-            $table->decimal('alt',10, 2)->nullable();
+            $table->decimal('lat',12,6)->nullable();
+            $table->decimal('lng',12,6)->nullable();
+            $table->decimal('alt',12,6)->nullable();
             $table->string('investigator_name',50)->nullable();
             $table->datetime('investigated_at')->nullable();
             $table->timestamp('upload_at')->nullable();

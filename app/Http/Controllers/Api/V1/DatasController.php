@@ -188,8 +188,8 @@ class DatasController extends Controller
         $plot->upload_at = $res['upload_at'];
       }
 
-      if($res['specie_list']){
-        foreach ($res['specie_list'] as $p) {
+      if($res['species_list']){
+        foreach ($res['species_list'] as $p) {
           $this->_storeSpecie($land, $p);
         }
       }
@@ -226,7 +226,7 @@ class DatasController extends Controller
       if($specie){
         return $this->response->errorBadRequest("specie_id 已经存在");
       }
-      
+
       $land = Land::where('land_id',$land_id);
       $plot = Plot::where('plot_id',$plot_id);
       if($plot && $land && $this->isOwner($this->user(), $land) && $this->isOwner($land, $plot)){

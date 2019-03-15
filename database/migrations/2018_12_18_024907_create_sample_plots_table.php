@@ -21,9 +21,9 @@ class CreateSamplePlotsTable extends Migration
           $table->enum('type', ['herb', 'shrub','arbor'])->nullable();//herb,草本,shrub,灌木,arbor,乔木
           $table->json('data');
           $table->foreign('land_id')->references('id')->on('lands')->onUpdate('cascade')->onDelete('cascade');
-          $table->decimal('lat', 10, 8)->nullable();
-          $table->decimal('lng', 10, 8)->nullable();
-          $table->decimal('alt',10, 2)->nullable();
+          $table->decimal('lat',12,6)->nullable();
+          $table->decimal('lng',12,6)->nullable();
+          $table->decimal('alt',12,6)->nullable();
           $table->string('investigator_name')->nullable();
           $table->datetime('investigated_at')->nullable();
           $table->timestamp('upload_at')->nullable();
