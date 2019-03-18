@@ -34,7 +34,9 @@ class DatasController extends Controller
     public function updateLand($land_id, Request $request){
       $land = Land::where('land_id',$land_id)->first();
       if($land && $this->isOwner($this->user(), $land)){
-        $land->update($request);
+        $res = $request->json()->all();
+        $land = $this->_storeLand($land, $res);
+
         return $this->response->item($land, new DatasLandTransformer());
       }
       return $this->response->errorUnauthorized("更新错误!");
@@ -45,8 +47,11 @@ class DatasController extends Controller
     public function updatePlot($land_id, $plot_id, Request $request){
       $land = Land::where('land_id',$land_id)->first();
       $plot = Plot::where('plot_id',$plot_id)->first();
+
+
       if($land && $this->isOwner($this->user()) && $plot && $this->isOwner($land, $plot)){
-        $plot->update($request);
+        $res = $request->json()->all();
+        $plot = $plot->_storePlot($land,$plot,$res);
         $plot->owners()->detach();
         foreach( $request->owner_list as $owner_id){
           $owner = Plot::where('plot_id', $owner_id)->first();
@@ -61,8 +66,10 @@ class DatasController extends Controller
 
     public function updatePoint($point_id, Request $request){
       $point = Point::where('point_id', $point_id)->first();
-      if($point && $this->isOwner($this->user())){
-        $point->update($request);
+      if($point && $this->isOwner($point, $this->user())){
+        $res = $request->json()->all();
+
+        $point = $point->_storePoint($point,$res);
         return $this->response->item($point, new DatasPointTransformer());
       }
       return $this->response->errorUnauthorized("更新错误!");
@@ -74,15 +81,29 @@ class DatasController extends Controller
       $specie = Specie::where('species_id', $species_id)->first();
 
       if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land, $plot) && $specie && $this->isOwner($plot, $specie)){
-        $specie->update($request);
+        //$specie->update($request);
+        $res = $request->json()->all();
+        $specie = $this->_storeSpecie($plot, $specie, $res);
         return $this->response->item($specie, new DatasSpecieTransformer());
       }
       return $this->response->errorUnauthorized("更新错误!");
     }
-
     public function storeLand(Request $request){
-      $land = new Land();
       $res = $request->json()->all();
+      $land = Land::where('land_id',$res['land_id'])->first();
+      if($land){
+        return $this->response->errorBadRequest("land_id 已经存在");
+      }
+      $land = new Land();
+
+      $land = $this->_storeLand($land, $res);
+      return $this->response->item($land, new DatasLandTransformer());
+
+    }
+
+    public function _storeLand($land, $res){
+
+
       if($res['land_id']){
         $land->land_id = $res['land_id'];
       }
@@ -111,15 +132,16 @@ class DatasController extends Controller
       $land->user()->associate($this->user());
       $land->save();
 
-      if($res['plot_list']){
+      if(array_key_exists('plot_list', $res) && $res['plot_list']){
         foreach ($res['plot_list'] as $p) {
-          $this->_storePlot($land, $p);
+          $plot = new Plot();
+          $this->_storePlot($land, $plot, $p);
         }
       }
-      return $this->response->item($land, new DatasLandTransformer());
+      return $land;
     }
-    protected function _storeSpecie($plot, $res){
-      $specie = new Specie();
+    protected function _storeSpecie($plot, $specie, $res){
+      //$specie = new Specie();
       if($res['species_id']){
         $specie->species_id = $res['species_id'];
       }
@@ -147,8 +169,8 @@ class DatasController extends Controller
       $specie->save();
       return $specie;
     }
-    protected function _storePlot($land, $res){
-      $plot = new Plot();
+    protected function _storePlot($land, $plot, $res){
+      //$plot = new Plot();
       if($res['plot_id']){
         $plot->plot_id = $res['plot_id'];
       }
@@ -176,16 +198,11 @@ class DatasController extends Controller
       if($res['data']){
         $plot->data = json_encode($res['data']);
       }
-      if($res['upload_at']){
+      if(array_key_exists('upload_at', $res) && $res['upload_at']){
         $plot->upload_at = $res['upload_at'];
       }
 
-      if($res['species_list']){
-        foreach ($res['species_list'] as $p) {
-          $this->_storeSpecie($land, $p);
-        }
-      }
-      if($res['owner_list']){
+      if(array_key_exists('owner_list', $res) && $res['owner_list']){
         foreach( $res['owner_list'] as $owner_id){
           $owner = Plot::where('plot_id', $owner_id)->first();
           if($owner){
@@ -196,14 +213,28 @@ class DatasController extends Controller
 
       $plot->land()->associate($land);
       $plot->save();
+
+      if(array_key_exists('species_list', $res) && $res['species_list']){
+        foreach ($res['species_list'] as $p) {
+          
+          $specie = new Specie();
+          $this->_storeSpecie($plot,$specie,$p);
+        }
+      }
+
       return $plot;
     }
     public function storePlot($land_id, Request $request){
+      $res = $request->json()->all();
+      $plot = Plot::where('plot_id',$res['plot_id'])->first();
+      if($plot){
+        return $this->response->errorBadRequest("plot_id 已经存在");
+      }
       $land = Land::where('land_id',$land_id);
       if($land && $this->isOwner($this->user(), $land)){
-        $res = $request->json()->all();
-        $plot = $this->_storePlot($land, $res);
+
         $plot = new Plot();
+        $plot = $this->_storePlot($land,$plot, $res);
 
         return $this->response->item($plot, new DatasPlotTransformer());
       }
@@ -222,23 +253,27 @@ class DatasController extends Controller
       $land = Land::where('land_id',$land_id);
       $plot = Plot::where('plot_id',$plot_id);
       if($plot && $land && $this->isOwner($this->user(), $land) && $this->isOwner($land, $plot)){
-
-        $specie = $this->_storeSpecie($plot, $res);
+        $specie = new Specie();
+        $specie = $this->_storeSpecie($plot, $specie ,$res);
         return $this->response->array($specie);
       }
       else{
         return $this->response->errorUnauthorized("样方 ID 错误！或权限不足");
       }
     }
-
     public function storePoint(Request $request){
       $res = $request->json()->all();
       $point = Point::where('point_id',$res['point_id'])->first();
       if($point){
         return $this->response->errorBadRequest("point_id 已经存在");
       }
-
       $point = new Point();
+      $point = $this->_storePoint($point, $res);
+      return $this->response->item($point, new DatasPointTransformer());
+
+    }
+    public function _storePoint($point, $res){
+
       $point->code = $res['code'];
       $point->point_id=$res['point_id'];
       if($res['lat']){
@@ -264,7 +299,7 @@ class DatasController extends Controller
 
       $point->user()->associate($this->user());
       $point->save();
-      return $this->response->item($point, new DatasPointTransformer());
+      return $point;
     }
 
     public function storePicture(PictureRequst $request){
@@ -293,7 +328,7 @@ class DatasController extends Controller
     public function showPlot($land_id, $plot_id, Request $request){
       $land = Land::where('land_id',$land_id)->first();
       $plot = Plot::where('plot_id',$plot_id)->first();
-      if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land, $plot)){
+      if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land,$plot)){
         return $item->response->item($plot, new DatasPlotTransformer());
       }
       else{
@@ -305,7 +340,7 @@ class DatasController extends Controller
       $land = Land::where('land_id',$land_id)->first();
       $plot = Plot::where('plot_id',$plot_id)->first();
       $specie = Specie::where('species_id',$species_id)->first();
-      if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land, $plot) && $specie && $this->isOwner($plot, $specie)){
+      if($land && $this->isOwner($this->user(),$land) && $plot && $this->isOwner($land,$plot) && $specie && $this->isOwner($plot,$specie)){
         return $item->response->item($specie, new DatasSpecieTransformer());
       }
       else{
@@ -315,8 +350,42 @@ class DatasController extends Controller
 
     public function showPoint($point_id, Request $request){
       $point = Point::where('point_id',$point_id)->first();
-      if($point && $this->isOwner($this->user(), $point)){
+      if($point && $this->isOwner($this->user(),$point)){
         return $this->response->item($point, new DatasPointTransformer());
+      }
+      else{
+        return $this->response->errorUnauthorized("权限不足！");
+      }
+    }
+
+    public function deletePlot($land_id, $plot_id, Request $request){
+      $land = Land::where('land_id',$land_id)->first();
+      $plot = Plot::where('plot_id',$plot_id)->first();
+      if($land && $this->isOwner($this->user(),$land) && $plot && $this->isOwner($land,$plot)){
+        $plot->delete();
+      }
+      else{
+        return $this->response->errorUnauthorized("权限不足！");
+      }
+    }
+    public function deleteLand($land_id, Request $request){
+      $land = Land::where('land_id',$land_id)->first();
+      Log::info($land);
+      Log::info($this->isOwner($this->user(),$land));
+      if($land && $this->isOwner($this->user(),$land)){
+        $land->delete();
+      }
+      else{
+        return $this->response->errorUnauthorized("权限不足！");
+      }
+    }
+
+    public function deleteSpecie($land_id, $plot_id, $species_id, Request $request){
+      $land = Land::where('land_id',$land_id)->first();
+      $plot = Plot::where('plot_id',$plot_id)->first();
+      $species = Specie::where('species_id', $species_id)->first();
+      if($land && $this->isOwner($this->user(),$land) && $plot && $this->isOwner($land,$plot) && $species && $this->isOwner($plot,$species)){
+        $species->delete();
       }
       else{
         return $this->response->errorUnauthorized("权限不足！");
@@ -325,11 +394,13 @@ class DatasController extends Controller
 
     public function deletePoint($point_id, Request $request){
       $point = Point::where('point_id',$point_id)->first();
-      if($point && $this->isOwner($this->user(), $point)){
+      if($point && $this->isOwner($this->user(),$point)){
         $point->delete();
       }
+      else{
+        return $this->response->errorUnauthorized("权限不足！");
+      }
 
-      //Point::destroy($point->id);
     }
 
     public function indexLand(Request $request){

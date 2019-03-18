@@ -18,6 +18,12 @@ class Land extends Base
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    public function delete(){
+      $this->plots()->delete();
+
+      return parent::delete();
+    }
+
     public function plots(){
       return $this->hasMany('App\Models\Plot');
     }

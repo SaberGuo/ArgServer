@@ -47,6 +47,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    public function land(){
+      return $this->hasMany('App\Models\Land');
+    }
     public function getFullNameAttribute($v){
       return $this->attributes['id']."-".$this->attributes['name'];
     }
@@ -58,7 +61,7 @@ class User extends Authenticatable implements JWTSubject
     public function findForPassport($username)
     {
         filter_var($username, FILTER_VALIDATE_EMAIL) ?
-          $credentials['email'] = $username :
+          $credentials['email'] = $username:
           $credentials['phone'] = $username;
 
         return self::where($credentials)->first();
