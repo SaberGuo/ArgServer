@@ -66,10 +66,10 @@ class DatasController extends Controller
 
     public function updatePoint($point_id, Request $request){
       $point = Point::where('point_id', $point_id)->first();
-      if($point && $this->isOwner($point, $this->user())){
+      if($point && $this->isOwner($this->user(),$point)){
         $res = $request->json()->all();
 
-        $point = $point->_storePoint($point,$res);
+        $point = $this->_storePoint($point,$res);
         return $this->response->item($point, new DatasPointTransformer());
       }
       return $this->response->errorUnauthorized("更新错误!");
@@ -216,7 +216,7 @@ class DatasController extends Controller
 
       if(array_key_exists('species_list', $res) && $res['species_list']){
         foreach ($res['species_list'] as $p) {
-          
+
           $specie = new Specie();
           $this->_storeSpecie($plot,$specie,$p);
         }
