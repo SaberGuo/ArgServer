@@ -49,7 +49,7 @@ class DatasController extends Controller
       $plot = Plot::where('plot_id',$plot_id)->first();
 
 
-      if($land && $this->isOwner($this->user()) && $plot && $this->isOwner($land, $plot)){
+      if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land, $plot)){
         $res = $request->json()->all();
         $plot = $plot->_storePlot($land,$plot,$res);
         $plot->owners()->detach();
