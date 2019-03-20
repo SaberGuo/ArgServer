@@ -56,7 +56,7 @@ class DatasController extends Controller
         foreach( $request->owner_list as $owner_id){
           $owner = Plot::where('plot_id', $owner_id)->first();
           if($owner){
-            $plot->owners()->associate($owner);
+            $plot->owners()->attach($owner->id);
           }
         }
         return $this->response->item($plot, new DatasPlotTransformer());
