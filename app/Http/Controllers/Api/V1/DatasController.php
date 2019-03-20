@@ -51,7 +51,7 @@ class DatasController extends Controller
 
       if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land, $plot)){
         $res = $request->json()->all();
-        $plot = $plot->_storePlot($land,$plot,$res);
+        $plot = $this->_storePlot($land,$plot,$res);
         $plot->owners()->detach();
         foreach( $request->owner_list as $owner_id){
           $owner = Plot::where('plot_id', $owner_id)->first();
@@ -202,17 +202,26 @@ class DatasController extends Controller
         $plot->upload_at = $res['upload_at'];
       }
 
-      if(array_key_exists('owner_list', $res) && $res['owner_list']){
-        foreach( $res['owner_list'] as $owner_id){
-          $owner = Plot::where('plot_id', $owner_id)->first();
-          if($owner){
-            $plot->owners()->associate($owner);
-          }
-        }
-      }
-
       $plot->land()->associate($land);
       $plot->save();
+
+      if(array_key_exists('owner_list', $res) && $res['owner_list']){
+        $owner_list = $res['owner_list'];
+        if(array_key_exists('plot', $owner_list) && $owner_list['plot']){
+
+          foreach( $owner_list['plot'] as $owner_id){
+
+            $owner = Plot::where('plot_id', $owner_id)->first();
+            Log::info($plot);
+            if($owner){
+              $plot->owners()->attach($owner->id);
+            }
+          }
+        }
+
+      }
+
+
 
       if(array_key_exists('species_list', $res) && $res['species_list']){
         foreach ($res['species_list'] as $p) {
@@ -234,7 +243,7 @@ class DatasController extends Controller
       if($land && $this->isOwner($this->user(), $land)){
 
         $plot = new Plot();
-        $plot = $this->_storePlot($land,$plot, $res);
+        $plot = $this->_storePlot($land, $plot, $res);
 
         return $this->response->item($plot, new DatasPlotTransformer());
       }
@@ -370,8 +379,8 @@ class DatasController extends Controller
     }
     public function deleteLand($land_id, Request $request){
       $land = Land::where('land_id',$land_id)->first();
-      Log::info($land);
-      Log::info($this->isOwner($this->user(),$land));
+      //Log::info($land);
+      //Log::info($this->isOwner($this->user(),$land));
       if($land && $this->isOwner($this->user(),$land)){
         $land->delete();
       }

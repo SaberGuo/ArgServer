@@ -15,11 +15,11 @@ class Plot extends Base
     protected $fillable = ['plot_id','code', 'lat', 'lng', 'alt','type','investigator_name','investigated_at','data','uploaded_at'];
 
     public function land() {
-        return $this->belongsTo('App\Models\Land', 'land_id','id');
+        return $this->belongsTo('App\Models\Land');
     }
 
     public function species(){
-      return $this->hasMany('App\Models\Specie','species_id','id');
+      return $this->hasMany('App\Models\Specie');
     }
 
     public function delete(){
