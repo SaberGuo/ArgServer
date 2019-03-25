@@ -4,10 +4,20 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Models\Picture;
+use App\Models\Land;
+use App\Models\Plot;
+use App\Models\Point;
+use App\Models\Specie;
 use App\Transformers\PictureTransformer;
 
 class PictureController extends Controller
 {
+    protected static $typeClasses = array(
+      'plot'=>Plot::class,
+      'land'=>Land::class,
+      'species'=>Specie::class,
+      'point'=>Point::class);
+
     //
     public function index(Request $request){
 
@@ -18,11 +28,19 @@ class PictureController extends Controller
     }
 
     public function _storePic($pic, $res){
+      $pic->picture_id = $res['picture_id'];
+
       if($res['type']){
         $pic->type = $res['type'];
       }
+
       if($res['owner_id']){
-        $pic->owner_id = $res['owner_id'];
+        $where = [$pic->type."_id","=",$res['owner_id']];
+        $owner = call_user_func_array([PictureController::$typeClasses[$pic->type],"where"],$where)->first();
+        if($owner){
+          $pic->owner_id = $owner->id;
+        }
+
       }
       if($res['url']){
         $pic->url = $res['url'];

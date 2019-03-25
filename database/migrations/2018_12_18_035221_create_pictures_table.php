@@ -16,7 +16,7 @@ class CreatePicturesTable extends Migration
         Schema::create('pictures', function (Blueprint $table) {
             $table->increments('id');
             $table->string('picture_id',50);
-            $table->enum('type', ['land', 'plot','specie','point']);
+            $table->enum('type', ['land', 'plot','species','point']);
             $table->integer('owner_id')->unsigned();
             $table->string('url',255);
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
