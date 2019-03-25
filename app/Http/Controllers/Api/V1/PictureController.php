@@ -65,7 +65,10 @@ class PictureController extends Controller
 
     }
 
-    public function delete(Request $request){
-
+    public function delete($picture_id, Request $request){
+      $pic = Picture::where('picture_id',$picture_id)->first();
+      if($pic){
+        $pic->delete();
+      }
     }
 }
