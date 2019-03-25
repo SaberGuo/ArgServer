@@ -19,11 +19,16 @@ class PictureController extends Controller
 
     public function _storePic($pic, $res){
       if($res['type']){
-        $pic->type = $res['type']
+        $pic->type = $res['type'];
       }
       if($res['owner_id']){
-        $pic->owner_id = $res['owner_id']
+        $pic->owner_id = $res['owner_id'];
       }
+      if($res['url']){
+        $pic->url = $res['url'];
+      }
+      $pic->save();
+      return $pic;
     }
 
     public function store(Request $request){
