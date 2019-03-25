@@ -21,7 +21,7 @@ class CreateSampleLandsTable extends Migration
             $table->json('data');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('type', ['grass', 'brush','forest'])->nullable();
+            $table->enum('type', ['grass', 'bush','tree'])->nullable();
             $table->decimal('lat',12,6)->nullable();
             $table->decimal('lng',12,6)->nullable();
             $table->decimal('alt',12,6)->nullable();
