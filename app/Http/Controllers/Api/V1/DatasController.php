@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
-
+use App\Api\Serializer\CustomSerializer;
 use App\Models\Land;
 use App\Models\Plot;
 use App\Models\Point;
@@ -37,7 +37,9 @@ class DatasController extends Controller
         $res = $request->json()->all();
         $land = $this->_storeLand($land, $res);
 
-        return $this->response->item($land, new DatasLandTransformer());
+        return $this->response->item($land, new DatasLandTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       return $this->response->errorUnauthorized("更新错误!");
 
@@ -59,7 +61,9 @@ class DatasController extends Controller
             $plot->owners()->attach($owner->id);
           }
         }
-        return $this->response->item($plot, new DatasPlotTransformer());
+        return $this->response->item($plot, new DatasPlotTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       return $this->response->errorUnauthorized("更新错误!");
     }
@@ -70,7 +74,9 @@ class DatasController extends Controller
         $res = $request->json()->all();
 
         $point = $this->_storePoint($point,$res);
-        return $this->response->item($point, new DatasPointTransformer());
+        return $this->response->item($point, new DatasPointTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       return $this->response->errorUnauthorized("更新错误!");
     }
@@ -84,7 +90,9 @@ class DatasController extends Controller
         //$specie->update($request);
         $res = $request->json()->all();
         $specie = $this->_storeSpecie($plot, $specie, $res);
-        return $this->response->item($specie, new DatasSpecieTransformer());
+        return $this->response->item($specie, new DatasSpecieTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       return $this->response->errorUnauthorized("更新错误!");
     }
@@ -97,7 +105,9 @@ class DatasController extends Controller
       $land = new Land();
 
       $land = $this->_storeLand($land, $res);
-      return $this->response->item($land, new DatasLandTransformer());
+      return $this->response->item($land, new DatasLandTransformer(),function ($resource, $fractal) {
+          $fractal->setSerializer(new CustomSerializer());
+      });
 
     }
 
@@ -245,7 +255,9 @@ class DatasController extends Controller
         $plot = new Plot();
         $plot = $this->_storePlot($land, $plot, $res);
 
-        return $this->response->item($plot, new DatasPlotTransformer());
+        return $this->response->item($plot, new DatasPlotTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       else{
         return $this->response->errorUnauthorized("样地 ID 错误！");
@@ -278,7 +290,9 @@ class DatasController extends Controller
       }
       $point = new Point();
       $point = $this->_storePoint($point, $res);
-      return $this->response->item($point, new DatasPointTransformer());
+      return $this->response->item($point, new DatasPointTransformer(),function ($resource, $fractal) {
+          $fractal->setSerializer(new CustomSerializer());
+      });
 
     }
     public function _storePoint($point, $res){
@@ -327,7 +341,9 @@ class DatasController extends Controller
       }
       $owner = $land->user()->get();
       if($owner->id == $this->user()->id){
-        return $item->response->item($land, new DatasLandTransformer());
+        return $item->response->item($land, new DatasLandTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       else{
         return $this->response->errorUnauthorized("权限不足！");
@@ -338,7 +354,9 @@ class DatasController extends Controller
       $land = Land::where('land_id',$land_id)->first();
       $plot = Plot::where('plot_id',$plot_id)->first();
       if($land && $this->isOwner($this->user(), $land) && $plot && $this->isOwner($land,$plot)){
-        return $item->response->item($plot, new DatasPlotTransformer());
+        return $item->response->item($plot, new DatasPlotTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       else{
         return $this->response->errorUnauthorized("权限不足！");
@@ -350,7 +368,9 @@ class DatasController extends Controller
       $plot = Plot::where('plot_id',$plot_id)->first();
       $specie = Specie::where('species_id',$species_id)->first();
       if($land && $this->isOwner($this->user(),$land) && $plot && $this->isOwner($land,$plot) && $specie && $this->isOwner($plot,$specie)){
-        return $item->response->item($specie, new DatasSpecieTransformer());
+        return $item->response->item($specie, new DatasSpecieTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       else{
         return $this->response->errorUnauthorized("权限不足！");
@@ -360,7 +380,9 @@ class DatasController extends Controller
     public function showPoint($point_id, Request $request){
       $point = Point::where('point_id',$point_id)->first();
       if($point && $this->isOwner($this->user(),$point)){
-        return $this->response->item($point, new DatasPointTransformer());
+        return $this->response->item($point, new DatasPointTransformer(),function ($resource, $fractal) {
+            $fractal->setSerializer(new CustomSerializer());
+        });
       }
       else{
         return $this->response->errorUnauthorized("权限不足！");
@@ -415,7 +437,9 @@ class DatasController extends Controller
     public function indexLand(Request $request){
       $lands = $this->user()->lands()->get();
 
-      return $this->response->collection($lands, new DatasLandTransformer());
+      return $this->response->collection($lands, new DatasLandTransformer(),function ($resource, $fractal) {
+          $fractal->setSerializer(new CustomSerializer());
+      });
     }
     public function indexPlot($land_id, Request $request){
       $land = Land::where('land_id',$land_id)->first();
@@ -443,7 +467,9 @@ class DatasController extends Controller
 
     public function indexPoint(Request $request){
       $points = $this->user()->points()->get();
-      return $this->response->array($points);
+      return $this->response->collection($points, new DatasPointTransformer(),function ($resource, $fractal) {
+          $fractal->setSerializer(new CustomSerializer());
+      });
     }
 
 

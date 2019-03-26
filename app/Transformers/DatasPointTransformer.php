@@ -17,6 +17,7 @@ class DatasPointTransformer extends TransformerAbstract
 
           'investigator_name' =>$point->investigator_name,
           'investigated_at' =>$point->investigated_at,
+          'pictures_list'=> $point->pictures(),
           //'uploaded_at' => $land->uploaded_at,
           'data' => json_decode($point->data),
 
