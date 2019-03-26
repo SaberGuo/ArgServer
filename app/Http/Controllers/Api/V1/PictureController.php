@@ -19,8 +19,9 @@ class PictureController extends Controller
       'point'=>Point::class);
 
     //
-    public function index(Request $request){
-
+    public function index($type, $owner_id, Request $request){
+      $pics = Picture::where('type',$type)->where('owner_id', $owner_id)->get();
+      return $this->response->array($pics);
     }
 
     public function show($pic_id, Request $request){

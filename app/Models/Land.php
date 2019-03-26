@@ -15,7 +15,7 @@ class Land extends Base
     protected $fillable = ['land_id','code', 'lat', 'lng', 'alt','type','investigator_name','investigated_at','data','uploaded_at'];
 
     public function user() {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function delete(){

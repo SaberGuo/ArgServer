@@ -239,7 +239,7 @@ class DatasController extends Controller
       if($plot){
         return $this->response->errorBadRequest("plot_id 已经存在");
       }
-      $land = Land::where('land_id',$land_id);
+      $land = Land::where('land_id',$land_id)->first();
       if($land && $this->isOwner($this->user(), $land)){
 
         $plot = new Plot();
@@ -259,8 +259,8 @@ class DatasController extends Controller
         return $this->response->errorBadRequest("species_id 已经存在");
       }
 
-      $land = Land::where('land_id',$land_id);
-      $plot = Plot::where('plot_id',$plot_id);
+      $land = Land::where('land_id',$land_id)->first();
+      $plot = Plot::where('plot_id',$plot_id)->first();
       if($plot && $land && $this->isOwner($this->user(), $land) && $this->isOwner($land, $plot)){
         $specie = new Specie();
         $specie = $this->_storeSpecie($plot, $specie ,$res);
@@ -413,18 +413,36 @@ class DatasController extends Controller
     }
 
     public function indexLand(Request $request){
-
+      $lands = $this->user()->lands()->get();
+      return $this->response->array($lands);
     }
-    public function indexPlot(Request $request){
-
+    public function indexPlot($land_id, Request $request){
+      $land = Land::where('land_id',$land_id)->first();
+      if($land && $this->isOwner($this->user(),$land) ){
+        $plots = $land->plots()->get();
+        return $this->response->array($plots);
+      }
+      else{
+        return $this->response->errorUnauthorized("权限不足！");
+      }
     }
 
-    public function indexSpecie(Request $request){
+    public function indexSpecie($land_id, $plot_id, Request $request){
+      $land = Land::where('land_id',$land_id)->first();
+      $plot = Plot::where('plot_id',$plot_id)->first();
+      if($land && $this->isOwner($this->user(),$land) && $plot && $this->isOwner($land,$plot)){
+        $species = $plot->species()->get();
+        return $this->response->array($species);
+      }
+      else{
+        return $this->response->errorUnauthorized("权限不足！");
+      }
 
     }
 
     public function indexPoint(Request $request){
-
+      $points = $this->user()->points()->get();
+      return $this->response->array($points);
     }
 
 

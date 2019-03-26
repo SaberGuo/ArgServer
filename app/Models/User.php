@@ -47,8 +47,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    public function land(){
+    public function lands(){
       return $this->hasMany('App\Models\Land');
+    }
+    public function points(){
+      return $this->hasMany('App\Models\Point');
     }
     public function getFullNameAttribute($v){
       return $this->attributes['id']."-".$this->attributes['name'];

@@ -86,7 +86,7 @@ $api->version('v1', [
                 $api->put('data/points/{point_id}','DatasController@updatePoint')->name('api.datas.updatePoint');
                 $api->delete('data/points/{point_id}','DatasController@deletePoint')->name('api.datas.deletePoint');
 
-                $api->get('data/pictures','PictureController@index')->name('api.pictures.index');
+                $api->get('data/pictures/{type}/{owner_id}','PictureController@index')->name('api.pictures.index');
                 $api->get('data/pictures/{picture_id}','PictureController@show')->name('api.pictures.show');
                 $api->post('data/pictures','PictureController@store')->name('api.pictures.store');
                 $api->put('data/pictures/{picture_id}','PictureController@update')->name('api.pictures.update');
