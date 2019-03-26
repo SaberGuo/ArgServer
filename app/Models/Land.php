@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Picture;
 use Illuminate\Database\Eloquent\Model;
 
 class Land extends Base
@@ -28,7 +28,7 @@ class Land extends Base
       return $this->hasMany('App\Models\Plot');
     }
     public function pictures(){
-      return Pictures::where('type','=','land')->where('owner_id','=',$this->id)->get();
+      return Picture::where('type','=','land')->where('owner_id','=',$this->id)->get();
     }
 
 

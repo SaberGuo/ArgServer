@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Picture;
 use Illuminate\Database\Eloquent\Model;
 
 class Specie extends Base
@@ -18,7 +18,7 @@ class Specie extends Base
         return $this->belongsTo('App\Models\Plot','plot_id','id');
     }
     public function pictures(){
-      return Pictures::where('type','=','specie')->where('owner_id','=',$this->id)->get();
+      return Picture::where('type','=','specie')->where('owner_id','=',$this->id)->get();
     }
 
 

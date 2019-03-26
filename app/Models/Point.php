@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Picture;
 use Illuminate\Database\Eloquent\Model;
 
 class Point extends Base
@@ -18,7 +18,7 @@ class Point extends Base
         return $this->belongsTo('App\Models\User', 'user_id');
     }
     public function pictures(){
-      return Pictures::where('type','=','point')->where('owner_id','=',$this->id)->get();
+      return Picture::where('type','=','point')->where('owner_id','=',$this->id)->get();
     }
 
 }

@@ -59,7 +59,8 @@ $api->version('v1', [
                 $api->get('user', 'UsersController@me')
                         ->name('api.user.show');
                 // 数据上传
-                $api->post('data','DatasController@store')->name('api.datas.store');
+                $api->get('data','DatasController@index')->name('api.datas.index');
+
 
                 // 样地数据
                 $api->get('/data/lands/{land_id}','DatasController@showLand')->name('api.datas.showLand');
@@ -85,7 +86,7 @@ $api->version('v1', [
                 $api->post('data/points','DatasController@storePoint')->name('api.datas.storePoint');
                 $api->put('data/points/{point_id}','DatasController@updatePoint')->name('api.datas.updatePoint');
                 $api->delete('data/points/{point_id}','DatasController@deletePoint')->name('api.datas.deletePoint');
-
+                //picture 数据
                 $api->get('data/pictures/{type}/{owner_id}','PictureController@index')->name('api.pictures.index');
                 $api->get('data/pictures/{picture_id}','PictureController@show')->name('api.pictures.show');
                 $api->post('data/pictures','PictureController@store')->name('api.pictures.store');

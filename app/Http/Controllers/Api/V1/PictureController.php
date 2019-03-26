@@ -25,7 +25,8 @@ class PictureController extends Controller
     }
 
     public function show($pic_id, Request $request){
-
+      $pic = Picture::where('picture_id',$pic_id)->first();
+      return $this->response->item($pic);
     }
 
     public function _storePic($pic, $res){

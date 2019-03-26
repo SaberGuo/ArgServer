@@ -27,7 +27,7 @@ use App\Transformers\DatasLandTransformer;
 class DatasController extends Controller
 {
     //
-    public function store(Request $request){
+    public function index(Request $request){
 
     }
 
@@ -414,7 +414,8 @@ class DatasController extends Controller
 
     public function indexLand(Request $request){
       $lands = $this->user()->lands()->get();
-      return $this->response->array($lands);
+
+      return $this->response->collection($lands, new DatasLandTransformer());
     }
     public function indexPlot($land_id, Request $request){
       $land = Land::where('land_id',$land_id)->first();

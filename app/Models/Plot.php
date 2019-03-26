@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Picture;
 use Illuminate\Database\Eloquent\Model;
 
 class Plot extends Base
@@ -33,6 +33,6 @@ class Plot extends Base
     }
 
     public function pictures(){
-      return Pictures::where('type','=','plot')->where('owner_id','=',$this->id)->get();
+      return Picture::where('type','=','plot')->where('owner_id','=',$this->id)->get();
     }
 }
