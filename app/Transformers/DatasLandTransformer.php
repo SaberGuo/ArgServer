@@ -17,14 +17,33 @@ class DatasLandTransformer extends TransformerAbstract
         // code...
         $plot->species_list = $plot->species()->get();
         $plot->pictures_list = $plot->pictures();
+        $plot->land_id = $land->land_id;
+        $plot->data = json_decode($plot->data);
+        $owner_list = array('plot'=>array());
+        $owners = $plot->owners()->get();
+        foreach ($owners as $ow) {
+          // code...
+          if(array_key_exists($ow::$tp, $owner_list)){
+            array_push($owner_list[$ow::$tp],$ow[$ow::$tp."_id"]);
+          }
+          else{
+            $owner_list[$ow::$tp] = array($ow[$ow::$tp."_id"]);
+          }
+        }
+        $plot->owner_list = $owner_list;
         foreach ($plot->species_list as $species) {
           // code...
           $species->pictures_list = $species->pictures();
+          $species->plot_id = $plot->plot_id;
+          $species->data = json_decode($species->data);
         }
       }
       $pics = $land->pictures();
         return [
             'id' => $land->id,
+            'land_id'=>$land->land_id,
+            'code'=>$land->code,
+            'upload_at'=>$land->upload_at,
             'lat' =>$land->lat,
             'lng' =>$land->lng,
             'alt' =>$land->alt,
