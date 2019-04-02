@@ -35,4 +35,8 @@ class Plot extends Base
     public function pictures(){
       return Picture::where('type','=','plot')->where('owner_id','=',$this->id)->get();
     }
+
+    public function app_id(){
+      return $this->plot_id;
+    }
 }

@@ -10,13 +10,19 @@ use League\Fractal\TransformerAbstract;
 
 class DatasLandTransformer extends TransformerAbstract
 {
+    private function DealPictureAppId($pictures){
+      foreach ($pictures as $pic) {
+        $pic->owner_id = $pic->owner_app_id();
+      }
+      return $pictures;
+    }
     public function transform(Land $land)
     {
       $plots = $land->plots()->get();
       foreach ($plots as $plot) {
         // code...
         $plot->species_list = $plot->species()->get();
-        $plot->pictures_list = $plot->pictures();
+        $plot->pictures_list = $this->DealPictureAppId($plot->pictures());
         $plot->land_id = $land->land_id;
         $plot->data = json_decode($plot->data);
         $owner_list = array('plot'=>array());
@@ -33,12 +39,13 @@ class DatasLandTransformer extends TransformerAbstract
         $plot->owner_list = $owner_list;
         foreach ($plot->species_list as $species) {
           // code...
-          $species->pictures_list = $species->pictures();
+          $species->pictures_list = $this->DealPictureAppId($species->pictures());
           $species->plot_id = $plot->plot_id;
           $species->data = json_decode($species->data);
         }
       }
-      $pics = $land->pictures();
+      $pics = $this->DealPictureAppId($land->pictures());
+
         return [
             'id' => $land->id,
             'land_id'=>$land->land_id,

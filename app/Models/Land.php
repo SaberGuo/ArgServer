@@ -31,5 +31,9 @@ class Land extends Base
       return Picture::where('type','=','land')->where('owner_id','=',$this->id)->get();
     }
 
+    public function app_id(){
+      return $this->land_id;
+    }
+
 
 }

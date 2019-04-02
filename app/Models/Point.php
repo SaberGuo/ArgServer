@@ -21,4 +21,8 @@ class Point extends Base
       return Picture::where('type','=','point')->where('owner_id','=',$this->id)->get();
     }
 
+    public function app_id(){
+      return $this->point_id;
+    }
+
 }

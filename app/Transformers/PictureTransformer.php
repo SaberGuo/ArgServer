@@ -12,7 +12,7 @@ class PictureTransformer extends TransformerAbstract
       return [
           'id' => $pic->id,
           'type' =>$pic->type,
-          'owner_id' =>$pic->owner_id,
+          'owner_id' =>$pic->owner_app_id(),
           'url' =>$pic->url
       ];
     }
