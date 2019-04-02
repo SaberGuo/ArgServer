@@ -23,6 +23,8 @@ class DatasPlotTransformer extends TransformerAbstract
       $plot->owner_list = $owner_list;
       return [
           'id' => $plot->id,
+          'plot_id'=>$plot->plot_id,
+          'code'=>$plot->code,
           'lat' =>$plot->lat,
           'lng' =>$plot->lng,
           'alt' =>$plot->alt,
@@ -30,7 +32,7 @@ class DatasPlotTransformer extends TransformerAbstract
           'investigator_name' =>$plot->investigator_name,
           'investigated_at' =>$plot->investigated_at,
           'owner_list'=>$plot->owner_list,
-          //'uploaded_at' => $land->uploaded_at,
+          'upload_at' => $plot->upload_at,
           'data' => json_decode($plot->data),
 
       ];
