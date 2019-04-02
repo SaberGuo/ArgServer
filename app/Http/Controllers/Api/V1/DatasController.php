@@ -55,13 +55,20 @@ class DatasController extends Controller
         $res = $request->json()->all();
         $plot = $this->_storePlot($land,$plot,$res);
         $plot->owners()->detach();
-        if($res['owner_list']){
-          foreach( $res['owner_list'] as $owner_id){
-            $owner = Plot::where('plot_id', $owner_id)->first();
-            if($owner){
-              $plot->owners()->attach($owner->id);
+        if(array_key_exists('owner_list', $res) && $res['owner_list']){
+          $owner_list = $res['owner_list'];
+          if(array_key_exists('plot', $owner_list) && $owner_list['plot']){
+
+            foreach( $owner_list['plot'] as $owner_id){
+
+              $owner = Plot::where('plot_id', $owner_id)->first();
+              Log::info($plot);
+              if($owner){
+                $plot->owners()->attach($owner->id);
+              }
             }
           }
+
         }
 
         return $this->response->item($plot, new DatasPlotTransformer(),function ($resource, $fractal) {
